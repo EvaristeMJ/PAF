@@ -1,4 +1,4 @@
-Parametres conseillés :
+### Parametres conseillés :
 
 Taille de la fenêtre TFCT : 1024 
 
@@ -9,7 +9,7 @@ Epsilon : Entre 10^-8 et 10^-10
 D tel que d_t contienne les informations présentes dans les 30 à 50 premières millisecondes de réverbération
 
 
-Bibliograhie :
+### Bibliograhie :
 
 La méthode classique la plus utilisée: 
 
@@ -24,3 +24,6 @@ Simulation de datasets:
 Réponses impulsionelles simulées : bibliothèque Pyroomacoustics
 
 Réponse mesurées dans de vraies salles https://github.com/RoyJames/room-impulse-responses 
+
+### Librairies d'audio test
+openslr.org
