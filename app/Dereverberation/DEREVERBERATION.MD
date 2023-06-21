@@ -1,8 +1,8 @@
 Parametres conseillés :
 
-Taille de la fenêtre TFCT : 1024
-Overlap : 50%
-Epsilon : Entre 10^-8 et 10^-10
+Taille de la fenêtre TFCT : 1024 //
+Overlap : 50% //
+Epsilon : Entre 10^-8 et 10^-10 //
 D tel que d_t contienne les informations présentes dans les 30 à 50 premières millisecondes de réverbération
 
 Bibliograhie :
