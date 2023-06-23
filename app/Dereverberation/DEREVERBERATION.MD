@@ -1,3 +1,7 @@
+### Fichiers
+
+reverb_gen.py : génère à partir d'un son une version avec de réverbération (intensité modulable)
+
 ### Parametres conseillés :
 
 Taille de la fenêtre TFCT : 1024 
