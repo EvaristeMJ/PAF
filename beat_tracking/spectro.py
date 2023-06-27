@@ -23,14 +23,13 @@ real=np.real
 plot=plt.plot
 stem=plt.stem
 show=plt.show # force l'affichage du graphique courant
-i=complex(0,1)
 pi=np.pi 
 
-
-audio_data,sample_rate = librosa.load('happy.mp3')
+#partie où est chargée la musique
+audio_data,sample_rate = librosa.load('mrbluesky.mp3')
 clap_data,clap_rate = librosa.load('clap.mp3')
 long_clap = len(clap_data)
-#audio_data = real(np.asarray((4000*[0]+[exp(2*i*pi*0.02*k) for k in range(4000)])*30))
+#audio_data = real(np.asarray((4000*[0]+[exp(2*i*pi*0.02*k) for k in range(4000)])*30)) 
 Fe=sample_rate
 Te=1/Fe
 
@@ -71,14 +70,10 @@ def affiche_spectrogramme(u,N,M=None,nb=None,Fe=8192):
     spectro=np.zeros((M//2+1,nombre_fen))
     for k in range(nombre_fen):
         spectro[:,k]=une_colonne_spectrogramme(u,M,N,k*nb)
-    temps_debut=0
-    temps_fin=nb*N*Te #COMPLETER
-    freq_debut=0
-    freq_fin=Fe/2 # COMPLETER
 
     return spectro
 
-
+# paramètres pour le spectrogramme
 N=512
 M=512
 nb=512
@@ -153,7 +148,6 @@ def maxima(curb,larg):
     return(Max)
 
 
-S=0
 tps_verif = int(0.2*Fe*len(Y)/len(audio_data)) # 0.2 seconde de tolérance pour détecter les maxima
 print(tps_verif)
 TabMax = maxima(Y,tps_verif)
@@ -174,6 +168,7 @@ Z=mycorrelate(Y,Y)
 plt.plot(np.arange(len(Z)),Z)
 plt.show()
 
+#calcule le tempo estimé à partir de la méthode d'autocorrélation
 def tempo_from_correl(cor):
     M = maxima(cor,tps_verif)
     print(M)
@@ -183,19 +178,13 @@ def tempo_from_correl(cor):
     S = S/4
     return(S*len(audio_data)*Te/len(cor))  # Avant : M[1]*len(audio_data)*Te/len(cor) ou S*len(audio_data)*Te/len(cor) 
 
-#Ajout des beats
 
-"""
-for k in TabMax:
-    ind = int(k*len(audio_data)/len(Y))
-    print(ind)        
-    audio_data[ind:ind+long_clap] = audio_data[ind:ind+long_clap]+10*clap_data
-"""
-
-#ajout des beats en se servant du tempo calculé
+# estimation du tempo
 tempo = tempo_from_correl(Z)
 print(tempo)
-pas_ind_tempo = int(tempo*Fe)
+pas_ind_tempo = int(tempo*Fe)*2
+
+#ajout de battements à intervalles réguliers : pas trop utiliisé
 """
 i = 0 # indice pour parcourir le tableau TabMax
 k = TabMax[1]
@@ -207,9 +196,8 @@ while ind<len(audio_data):
         audio_data[ind:ind+long_clap] = audio_data[ind:ind+long_clap]+10*clap_data # on a un indice particulier pour le clap si jamais il est ajouté en fin de musique
         ind = ind + pas_ind_tempo
 """
-       
-
-
+    
+#ajout de battement à intervalles réguliers + recalage tous les 4 battements
 i = 0 # indice pour parcourir le tableau TabMax
 k = TabMax[0]
 ind = int(k*len(audio_data)/len(Y))
@@ -241,22 +229,3 @@ normalized_data = np.interp(audio_data, (-1, 1), (-1, 1)) #normaliser les valeur
 audio_data_int = (normalized_data * 32767).astype(np.int16)
 
 scipy.io.wavfile.write('output.wav', sample_rate, audio_data_int)
-
-"""
-Fe = 20
-N = 200
-M = 200
-nb = 10
-spectps = affiche_spectrogramme(Y,N,M=M,nb=nb,Fe=Fe)
-plt.imshow(spectps)
-show()
-
-(itps,jtps) = np.shape(spectps)
-print(itps,jtps)
-for l in range(jtps):
-    argmax = 0
-    for k in range(itps):
-        if spectps[k,l]>spectps[argmax,l]:
-            argmax = k 
-    print(1/(argmax*(Fe/2)/itps))
-"""
